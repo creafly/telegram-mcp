@@ -1,0 +1,230 @@
+{
+  "tools": [
+    {
+      "name": "send_message",
+      "description": "Отправка текстового сообщения в Telegram чат. Поддерживает форматирование (HTML, Markdown), ответ на сообщения и отключение уведомлений. КОГДА ИСПОЛЬЗОВАТЬ: когда нужно отправить текстовое сообщение пользователю, в группу или канал.",
+      "parameters": {
+        "chat_id": {
+          "type": "string",
+          "description": "ID чата или username (начинается с @). Например: '123456789' или '@mychannel'",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "description": "Текст сообщения. Максимум 4096 символов. Поддерживает HTML и Markdown.",
+          "required": true
+        },
+        "parse_mode": {
+          "type": "string",
+          "description": "Режим парсинга: 'HTML', 'Markdown' или 'MarkdownV2'",
+          "required": false,
+          "default": "HTML"
+        },
+        "disable_notification": {
+          "type": "boolean",
+          "description": "Отключить звуковое уведомление о сообщении",
+          "required": false,
+          "default": false
+        },
+        "reply_to_message_id": {
+          "type": "integer",
+          "description": "ID сообщения, на которое нужно ответить",
+          "required": false
+        }
+      },
+      "returns": {
+        "type": "dict",
+        "description": "Объект с полями: success (boolean), message (string), data (информация о сообщении: message_id, chat, date, text)"
+      },
+      "errors": [
+        {
+          "error": "validation_error",
+          "description": "Некорректный chat_id, пустой текст или превышена максимальная длина"
+        },
+        {
+          "error": "telegram_api_error",
+          "description": "Ошибка Telegram API (бот заблокирован, чат не найден и т.д.)"
+        }
+      ]
+    },
+    {
+      "name": "get_updates",
+      "description": "Получение обновлений (входящих сообщений) от Telegram. КОГДА ИСПОЛЬЗОВАТЬ: когда нужно узнать какие сообщения пришли боту, получить chat_id пользователей или обработать команды.",
+      "parameters": {
+        "offset": {
+          "type": "integer",
+          "description": "Идентификатор первого обновления. Обновления с меньшим ID будут игнорироваться.",
+          "required": false
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Максимальное количество обновлений (1-100)",
+          "required": false,
+          "default": 100
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Таймаут для long polling в секундах (0 для немедленного ответа)",
+          "required": false,
+          "default": 0
+        }
+      },
+      "returns": {
+        "type": "dict",
+        "description": "Объект с полями: success (boolean), message (string), data (updates[], count)"
+      }
+    },
+    {
+      "name": "get_chat",
+      "description": "Получение информации о чате Telegram. КОГДА ИСПОЛЬЗОВАТЬ: когда нужно узнать информацию о чате, проверить тип (группа, канал, личный) или получить описание.",
+      "parameters": {
+        "chat_id": {
+          "type": "string",
+          "description": "ID чата или username (начинается с @)",
+          "required": true
+        }
+      },
+      "returns": {
+        "type": "dict",
+        "description": "Объект с информацией о чате: id, type, title, username, description и т.д."
+      }
+    },
+    {
+      "name": "get_me",
+      "description": "Получение информации о текущем боте. КОГДА ИСПОЛЬЗОВАТЬ: для проверки работоспособности бота, получения его username или ID.",
+      "parameters": {},
+      "returns": {
+        "type": "dict",
+        "description": "Информация о боте: id, is_bot, first_name, username, can_join_groups и т.д."
+      }
+    },
+    {
+      "name": "send_photo",
+      "description": "Отправка фотографии в Telegram чат. КОГДА ИСПОЛЬЗОВАТЬ: когда нужно отправить изображение пользователю или в группу.",
+      "parameters": {
+        "chat_id": {
+          "type": "string",
+          "description": "ID чата или username (начинается с @)",
+          "required": true
+        },
+        "photo": {
+          "type": "string",
+          "description": "URL фотографии или file_id ранее загруженного фото",
+          "required": true
+        },
+        "caption": {
+          "type": "string",
+          "description": "Подпись к фотографии (максимум 1024 символа)",
+          "required": false
+        },
+        "parse_mode": {
+          "type": "string",
+          "description": "Режим парсинга подписи",
+          "required": false
+        },
+        "disable_notification": {
+          "type": "boolean",
+          "description": "Отключить звуковое уведомление",
+          "required": false,
+          "default": false
+        }
+      },
+      "returns": {
+        "type": "dict",
+        "description": "Информация об отправленном сообщении с фото"
+      }
+    },
+    {
+      "name": "send_document",
+      "description": "Отправка документа в Telegram чат. КОГДА ИСПОЛЬЗОВАТЬ: когда нужно отправить файл любого типа (PDF, DOC и т.д.).",
+      "parameters": {
+        "chat_id": {
+          "type": "string",
+          "description": "ID чата или username (начинается с @)",
+          "required": true
+        },
+        "document": {
+          "type": "string",
+          "description": "URL документа или file_id ранее загруженного файла",
+          "required": true
+        },
+        "caption": {
+          "type": "string",
+          "description": "Подпись к документу (максимум 1024 символа)",
+          "required": false
+        },
+        "parse_mode": {
+          "type": "string",
+          "description": "Режим парсинга подписи",
+          "required": false
+        },
+        "disable_notification": {
+          "type": "boolean",
+          "description": "Отключить звуковое уведомление",
+          "required": false,
+          "default": false
+        }
+      },
+      "returns": {
+        "type": "dict",
+        "description": "Информация об отправленном сообщении с документом"
+      }
+    },
+    {
+      "name": "edit_message",
+      "description": "Редактирование текстового сообщения в Telegram. КОГДА ИСПОЛЬЗОВАТЬ: когда нужно исправить или обновить ранее отправленное сообщение.",
+      "parameters": {
+        "chat_id": {
+          "type": "string",
+          "description": "ID чата или username (начинается с @)",
+          "required": true
+        },
+        "message_id": {
+          "type": "integer",
+          "description": "ID сообщения для редактирования",
+          "required": true
+        },
+        "text": {
+          "type": "string",
+          "description": "Новый текст сообщения (максимум 4096 символов)",
+          "required": true
+        },
+        "parse_mode": {
+          "type": "string",
+          "description": "Режим парсинга",
+          "required": false
+        }
+      },
+      "returns": {
+        "type": "dict",
+        "description": "Информация об отредактированном сообщении"
+      }
+    },
+    {
+      "name": "delete_message",
+      "description": "Удаление сообщения в Telegram. КОГДА ИСПОЛЬЗОВАТЬ: когда нужно удалить сообщение из чата. ВАЖНО: Удаление необратимо!",
+      "parameters": {
+        "chat_id": {
+          "type": "string",
+          "description": "ID чата или username (начинается с @)",
+          "required": true
+        },
+        "message_id": {
+          "type": "integer",
+          "description": "ID сообщения для удаления",
+          "required": true
+        }
+      },
+      "returns": {
+        "type": "dict",
+        "description": "Информация об удалении: chat_id, message_id, deleted"
+      }
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "server_name": "mcp-telegram-server",
+    "description": "MCP сервер для работы с Telegram Bot API: отправка сообщений, получение обновлений, управление чатами",
+    "transport": "streamable-http"
+  }
+}
